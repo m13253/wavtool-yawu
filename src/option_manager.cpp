@@ -17,12 +17,12 @@
     see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <libwintf8/termio.h>
-#include "cmdline_parser.hpp"
+#include "option_manager.hpp"
 
-int main() {
-    WTF8::cerr << "It works!" << std::endl;
+namespace YAWU {
 
-    return 0;
+OptionManager::OptionManager() {
 }
+
+}
+

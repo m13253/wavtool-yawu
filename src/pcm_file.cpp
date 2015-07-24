@@ -17,7 +17,7 @@
     see <http://www.gnu.org/licenses/>.
 */
 
-#include "pcm-file.hpp"
+#include "pcm_file.hpp"
 #include <cstdio>
 #include <ios>
 #include <libwintf8/fileio.h>
@@ -28,7 +28,7 @@
 #endif
 #include <sndfile.hh>
 
-namespace RUCE {
+namespace YAWU {
 
 struct PCMFile::Private {
     SndfileHandle sndfile;

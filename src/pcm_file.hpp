@@ -17,10 +17,10 @@
     see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RUCE_PCM_FILE_HPP
-#define RUCE_PCM_FILE_HPP
+#ifndef YAWU_PCM_FILE_HPP
+#define YAWU_PCM_FILE_HPP
 
-#include "proxy-ptr.hpp"
+#include "proxy_ptr.hpp"
 #include <ios>
 #include <stdexcept>
 #include <libwintf8/u8str.h>
@@ -28,7 +28,7 @@
 typedef struct SNDFILE_tag SNDFILE;
 typedef class SndfileHandle SndFileHandle;
 
-namespace RUCE {
+namespace YAWU {
 
 class PCMFile {
 public:

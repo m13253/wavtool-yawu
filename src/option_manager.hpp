@@ -17,12 +17,24 @@
     see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <libwintf8/termio.h>
-#include "cmdline_parser.hpp"
+#ifndef YAWU_OPTION_MANAGER_HPP
+#define YAWU_OPTION_MANAGER_HPP
 
-int main() {
-    WTF8::cerr << "It works!" << std::endl;
+#include <vector>
+#include <libwintf8/u8str.h>
 
-    return 0;
+namespace YAWU {
+
+/**
+ * Store global status
+ */
+class OptionManager {
+    friend class CmdlineParser;
+public:
+    OptionManager();
+protected:
+};
+
 }
+
+#endif

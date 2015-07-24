@@ -17,12 +17,30 @@
     see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <libwintf8/termio.h>
-#include "cmdline_parser.hpp"
+#ifndef YAWU_CMDLINE_PARSER_HPP
+#define YAWU_CMDLINE_PARSER_HPP
 
-int main() {
-    WTF8::cerr << "It works!" << std::endl;
+#include <vector>
+#include <libwintf8/u8str.h>
+#include "option_manager.hpp"
 
-    return 0;
+namespace YAWU {
+
+/**
+ * Parse command line arguments, check errors and store them
+ */
+class CmdlineParser {
+public:
+    CmdlineParser(OptionManager &option_manager);
+    void parse_argv(const std::vector<WTF8::u8string> &argv) const;
+    static void print_help(const WTF8::u8string &argv0);
+protected:
+    OptionManager &option_manager;
+private:
+    static void log_argv(const std::vector<WTF8::u8string> &argv);
+    void analyze_argv(const std::vector<WTF8::u8string> &argv) const;
+};
+
 }
+
+#endif
