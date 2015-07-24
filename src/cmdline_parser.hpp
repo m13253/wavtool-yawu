@@ -20,6 +20,7 @@
 #ifndef YAWU_CMDLINE_PARSER_HPP
 #define YAWU_CMDLINE_PARSER_HPP
 
+#include <stdexcept>
 #include <vector>
 #include <libwintf8/u8str.h>
 #include "option_manager.hpp"
@@ -32,13 +33,20 @@ namespace YAWU {
 class CmdlineParser {
 public:
     CmdlineParser(OptionManager &option_manager);
-    void parse_argv(const std::vector<WTF8::u8string> &argv) const;
+    bool parse_argv(const std::vector<WTF8::u8string> &argv) const;
     static void print_help(const WTF8::u8string &argv0);
+    class CmdlineParseError;
 protected:
     OptionManager &option_manager;
 private:
     static void log_argv(const std::vector<WTF8::u8string> &argv);
-    void analyze_argv(const std::vector<WTF8::u8string> &argv) const;
+    bool analyze_argv(const std::vector<WTF8::u8string> &argv) const;
+    static double parse_note_length(const WTF8::u8string &argv4);
+};
+
+class CmdlineParser::CmdlineParseError : public std::runtime_error {
+public:
+    CmdlineParseError() : std::runtime_error("Invalid command line arguments") {}
 };
 
 }

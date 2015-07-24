@@ -18,11 +18,24 @@
 */
 
 #include <iostream>
+#include <libwintf8/argv.h>
 #include <libwintf8/termio.h>
 #include "cmdline_parser.hpp"
+#include "proxy_ptr.hpp"
 
 int main() {
-    WTF8::cerr << "It works!" << std::endl;
+    using namespace YAWU;
+
+    proxy_ptr<OptionManager> option_manager; // full lifetime object
+
+    WTF8::cerr << "wavtool-yawu, Yet Another Wavtool for UTAU" << std::endl
+               << "https://github.com/m13253/wavtool-yawu" << std::endl
+               << std::endl;
+
+    {
+        CmdlineParser cmdline_parser(*option_manager.get());
+        cmdline_parser.parse_argv(WTF8::getargv());
+    }
 
     return 0;
 }

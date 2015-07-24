@@ -32,7 +32,19 @@ class OptionManager {
     friend class CmdlineParser;
 public:
     OptionManager();
+
 protected:
+    WTF8::u8string output_file_name;
+    WTF8::u8string input_file_name;
+
+    // Parameters are converted into units of seconds
+    double stp = 0;
+    double note_length = 0;
+    double overlap = 0;
+
+    double p[6] = { 0 };
+    double v[6] = { 1 };
+    bool p5_enabled = false;
 };
 
 }
