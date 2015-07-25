@@ -82,8 +82,17 @@ PCMMerger &PCMMerger::prepare() {
         return *this;
     }
     p->prefix_samples = size_t(option_manager.get_overlap() * p->sample_rate);
+    if(p->prefix_samples < 0) {
+        WTF8::cerr << "Warning: overlap value is negative" << std::endl;
+        p->prefix_samples = 0;
+    }
     p->append_samples = size_t(RandRound()(option_manager.get_note_length() * p->sample_rate));
+    if(p->append_samples < 0) {
+        WTF8::cerr << "Warning: note length is negative" << std::endl;
+        p->append_samples = 0;
+    }
     p->existing_samples = p->output_file.frames();
+    assert(p->existing_samples >= 0);
     p->envelope = std::move(std::vector<double>(p->prefix_samples + p->append_samples, 1));
     p->buffer1 = std::move(std::vector<double>(p->prefix_samples + p->append_samples, 0));
     p->buffer2 = std::move(std::vector<double>(p->prefix_samples + p->append_samples, 0));
