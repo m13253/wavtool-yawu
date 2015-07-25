@@ -124,6 +124,9 @@ double CmdlineParser::parse_note_length(const WTF8::u8string &argv4) {
         if(pos_sign != argv4.npos) {
             double frac = strtonum(std::strtod, &argv4.data()[pos_sign])/1000;
             note_length += frac;
+            if(argv4.size() > pos_sign+1 && argv4[pos_sign+1] == '.')
+                WTF8::cerr << "Warning: UTAU is providing incorrect parameters," << std::endl
+                           << "please check \"Tools\" -> \"Option\" -> \"Rendering\" -> \"Note length calculated by GUI front-end\"." << std::endl;
         }
         return note_length;
     } else {
