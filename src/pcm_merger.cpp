@@ -65,7 +65,7 @@ PCMMerger &PCMMerger::prepare() {
         WTF8::cerr << "Unable to open input file: " << e.what() << std::endl;
     }
     try {
-        p->output_file.open(option_manager.get_output_file_name(), std::ios_base::in | std::ios_base::out, SF_FORMAT_WAV | SF_FORMAT_PCM_16, 1, p->sample_rate != 0 ? p->sample_rate : 44100);
+        p->output_file.open(option_manager.get_output_file_name(), std::ios_base::in | std::ios_base::out, SF_FORMAT_WAV | SF_FORMAT_PCM_32, 1, p->sample_rate != 0 ? p->sample_rate : 44100);
         if(p->sample_rate != 0) {
             if(p->sample_rate != p->output_file.sample_rate()) {
                 WTF8::cerr << "Warning: Sample rate mismatch between input and output file" << std::endl
@@ -190,7 +190,7 @@ PCMMerger &PCMMerger::mix_new_segment() {
         auto new_segment = p->buffer2.data();
         auto envelope = p->envelope.data();
         for(size_t i = 0; i < p->buffer1.size(); i++)
-            old_segments[i] += new_segment[i] * envelope[i];
+            old_segments[i] += clamp(new_segment[i] * envelope[i], -1.0, 1.0);
     }
     return *this;
 }
