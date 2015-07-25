@@ -103,6 +103,7 @@ bool CmdlineParser::analyze_argv(const std::vector<WTF8::u8string> &argv) const 
     option_manager.v[3] = parse_arg_number(10, 100, 1);
     option_manager.v[4] = parse_arg_number(11, 100, 1);
     option_manager.overlap = parse_arg_number(12, 1000, 0);
+    option_manager.note_length -= option_manager.overlap;
     option_manager.p[4] = parse_arg_number(13, 1000, 0);
     if(argc > 15) {
         option_manager.p5_enabled = true;
@@ -119,7 +120,7 @@ double CmdlineParser::parse_note_length(const WTF8::u8string &argv4) {
         auto pos_sign = argv4.find_first_of("+-", pos_at+1);
         double ticks = strtonum(std::strtod, argv4.substr(0, pos_at).c_str());
         double tempo = strtonum(std::strtod, argv4.substr(pos_at+1, pos_sign != argv4.npos ? pos_sign-pos_at-1 : pos_sign).c_str());
-        double note_length = ticks/tempo/8;
+        double note_length = tempo != 0 ? ticks/tempo/8 : 0;
         if(pos_sign != argv4.npos) {
             double frac = strtonum(std::strtod, &argv4.data()[pos_sign])/1000;
             note_length += frac;
