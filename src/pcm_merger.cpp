@@ -95,9 +95,9 @@ PCMMerger &PCMMerger::prepare() {
     }
     p->existing_samples = p->output_file.frames();
     assert(p->existing_samples >= 0);
-    p->envelope = std::move(std::vector<double>(p->prefix_samples + p->append_samples, 1));
-    p->buffer1 = std::move(std::vector<double>(p->prefix_samples + p->append_samples, 0));
-    p->buffer2 = std::move(std::vector<double>(p->prefix_samples + p->append_samples, 0));
+    p->envelope = std::move(std::vector<double>(p->prefix_samples + p->append_samples));
+    p->buffer1 = std::move(std::vector<double>(p->prefix_samples + p->append_samples));
+    p->buffer2 = std::move(std::vector<double>(p->prefix_samples + p->append_samples));
     return *this;
 }
 
@@ -178,6 +178,22 @@ PCMMerger &PCMMerger::construct_envelope() {
     interpolate_envelope(abs_p[3], abs_v[3], abs_p[4], abs_v[4]);
     interpolate_envelope(abs_p[4], abs_v[4], abs_p[5], abs_v[5]);
     interpolate_envelope(abs_p[5], abs_v[5], abs_p[6], abs_v[6]);
+
+    WTF8::clog << "Env: ";
+    for(double i = 0.5; i < 74; i++) {
+        size_t sample_idx = size_t(p->envelope.size() * i / 74);
+        auto env_value = p->envelope[sample_idx];
+        char visual =
+            env_value < 1.0 ?
+                env_value < 0.5 ?
+                    env_value < 0.25 ? ' ' : '.' :
+                    env_value < 0.75 ? ':' : '-' :
+                env_value <= 1.5 ?
+                    env_value < 1.25 ? '=' : 'X' :
+                    env_value <= 2.0 ? '#' : '!';
+        WTF8::clog << visual;
+    }
+    WTF8::clog << std::endl;
 
     return *this;
 }
