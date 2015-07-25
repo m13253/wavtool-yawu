@@ -17,31 +17,39 @@
     see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <libwintf8/argv.h>
-#include <libwintf8/termio.h>
-#include "cmdline_parser.hpp"
-#include "pcm_merger.hpp"
-#include "proxy_ptr.hpp"
+#include "rand_round.hpp"
+#include <cmath>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <time.h>
+#endif
 
-int main() {
-    using namespace YAWU;
+namespace YAWU {
 
-    proxy_ptr<OptionManager> option_manager; // full lifetime object
+#ifdef _WIN32
+RandRound::RandRound() :
+    fast_random(uint32_t(GetTickCount())) {
+}
+#else
+RandRound::RandRound() :
+    fast_random(uint32_t(clock())) {
+}
+#endif
 
-    WTF8::cerr << "wavtool-yawu, Yet Another Wavtool for UTAU" << std::endl
-               << "https://github.com/m13253/wavtool-yawu" << std::endl
-               << std::endl;
-
-    {
-        CmdlineParser cmdline_parser(*option_manager.get());
-        cmdline_parser.parse_argv(WTF8::getargv());
+long RandRound::operator() (double value) {
+    double int_part;
+    double frac_part = std::modf(value, &int_part);
+    float rand_value = fast_random();
+    long int_value = long(int_part);
+    if(frac_part >= 0) {
+        if(frac_part > rand_value)
+            int_value++;
+    } else {
+        if(-frac_part > rand_value)
+            int_value--;
     }
+    return int_value;
+}
 
-    {
-        PCMMerger pcm_merger(*option_manager.get());
-        pcm_merger.prepare();
-    }
-
-    return 0;
 }

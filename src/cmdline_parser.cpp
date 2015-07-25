@@ -108,7 +108,8 @@ bool CmdlineParser::analyze_argv(const std::vector<WTF8::u8string> &argv) const 
         option_manager.p5_enabled = true;
         option_manager.p[5] = parse_arg_number(14, 1000, 0);
         option_manager.v[5] = parse_arg_number(15, 100, 1);
-    }
+    } else
+        option_manager.p5_enabled = false;
     return success;
 }
 

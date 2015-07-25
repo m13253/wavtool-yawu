@@ -20,6 +20,7 @@
 #ifndef YAWU_OPTION_MANAGER_HPP
 #define YAWU_OPTION_MANAGER_HPP
 
+#include <cassert>
 #include <vector>
 #include <libwintf8/u8str.h>
 
@@ -33,6 +34,20 @@ class OptionManager {
 public:
     OptionManager();
 
+    WTF8::u8string get_output_file_name() const { return output_file_name; }
+    WTF8::u8string get_input_file_name() const { return input_file_name; }
+    double get_stp() const { return stp; }
+    double get_note_length() const { return note_length; }
+    double get_overlap() const { return overlap; }
+    double get_env_p(size_t idx) const {
+        assert(idx > 0 && idx < 6);
+        return p[idx];
+    }
+    double get_env_v(size_t idx) const {
+        assert(idx > 0 && idx < 6);
+        return v[idx];
+    }
+    bool is_p5_enabled() const { return p5_enabled; }
 protected:
     WTF8::u8string output_file_name;
     WTF8::u8string input_file_name;

@@ -20,10 +20,10 @@
 #ifndef YAWU_PCM_FILE_HPP
 #define YAWU_PCM_FILE_HPP
 
-#include "proxy_ptr.hpp"
 #include <ios>
 #include <stdexcept>
 #include <libwintf8/u8str.h>
+#include "proxy_ptr.hpp"
 
 typedef struct SNDFILE_tag SNDFILE;
 typedef class SndfileHandle SndFileHandle;

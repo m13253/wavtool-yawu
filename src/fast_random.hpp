@@ -17,31 +17,33 @@
     see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <libwintf8/argv.h>
-#include <libwintf8/termio.h>
-#include "cmdline_parser.hpp"
-#include "pcm_merger.hpp"
-#include "proxy_ptr.hpp"
+#ifndef YAWU_FAST_RANDOM_HPP
+#define YAWU_FAST_RANDOM_HPP
 
-int main() {
-    using namespace YAWU;
+#include <cstdint>
 
-    proxy_ptr<OptionManager> option_manager; // full lifetime object
+namespace YAWU {
 
-    WTF8::cerr << "wavtool-yawu, Yet Another Wavtool for UTAU" << std::endl
-               << "https://github.com/m13253/wavtool-yawu" << std::endl
-               << std::endl;
-
-    {
-        CmdlineParser cmdline_parser(*option_manager.get());
-        cmdline_parser.parse_argv(WTF8::getargv());
+/**
+ * Return a pseudo-random between [0, 1)
+ */
+class FastRandom {
+public:
+    FastRandom(uint32_t seed = 1) :
+        mirand(seed) {}
+    float operator() () {
+        mirand *= 16807;
+        union { 
+            uint32_t i;
+            float f;
+        } a;
+        a.i = (mirand & 0x7fffff) | 0x3f800000;
+        return a.f-1;
     }
+private:
+    uint32_t mirand;
+};
 
-    {
-        PCMMerger pcm_merger(*option_manager.get());
-        pcm_merger.prepare();
-    }
-
-    return 0;
 }
+
+#endif
