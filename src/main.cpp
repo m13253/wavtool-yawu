@@ -29,7 +29,8 @@ int main() {
 
     proxy_ptr<OptionManager> option_manager; // full lifetime object
 
-    WTF8::cerr << "wavtool-yawu, Yet Another Wavtool for UTAU" << std::endl
+    WTF8::cerr << std::endl
+               << "wavtool-yawu, Yet Another Wavtool for UTAU" << std::endl
                << "https://github.com/m13253/wavtool-yawu" << std::endl
                << std::endl;
 
