@@ -18,6 +18,7 @@
 */
 
 #include "pcm_merger.hpp"
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -28,6 +29,7 @@
 #include "option_manager.hpp"
 #include "pcm_file.hpp"
 #include "rand_round.hpp"
+#include "utils.hpp"
 
 namespace YAWU {
 
@@ -129,6 +131,54 @@ PCMMerger &PCMMerger::read_new_segment() {
 }
 
 PCMMerger &PCMMerger::construct_envelope() {
+    if(p->envelope.size() == 0)
+        return *this;
+
+    ssize_t abs_p[7];
+    double abs_v[7];
+    abs_p[0] = 0;
+    abs_v[0] = 0;
+    abs_p[1] = ssize_t(option_manager.get_env_p(1) * p->sample_rate);
+    abs_v[1] = option_manager.get_env_v(1);
+    abs_p[2] = ssize_t((option_manager.get_env_p(0) + option_manager.get_env_p(1)) * p->sample_rate);
+    abs_v[2] = option_manager.get_env_v(2);
+    if(option_manager.is_p5_enabled()) {
+        abs_p[3] = ssize_t((option_manager.get_env_p(0) + option_manager.get_env_p(1) + option_manager.get_env_p(2)) * p->sample_rate);
+        abs_v[3] = option_manager.get_env_v(5);
+    } else {
+        abs_p[3] = abs_p[2];
+        abs_v[3] = abs_v[2];
+    }
+    abs_p[4] = ssize_t(p->envelope.size()-1) - ssize_t((option_manager.get_env_p(3) + option_manager.get_env_p(4)) * p->sample_rate);
+    abs_v[4] = option_manager.get_env_v(3);
+    abs_p[5] = ssize_t(p->envelope.size()-1) - ssize_t(option_manager.get_env_p(4) * p->sample_rate);
+    abs_v[5] = option_manager.get_env_v(4);
+    abs_p[6] = ssize_t(p->envelope.size()-1);
+    abs_v[6] = 0;
+
+    const auto interpolate_envelope = [&](ssize_t pa, double va, ssize_t pb, double vb) {
+        if(pa == pb)
+            return;
+        pa = clamp(0, pa, ssize_t(p->envelope.size()-1));
+        pb = clamp(0, pb, ssize_t(p->envelope.size()-1));
+        auto envelope = p->envelope.data();
+        double k = (vb-va) / (pb-pa);
+        if(pa < pb) {
+            for(auto i = pa; i <= pb; i++)
+                envelope[i] = std::max((i-pa)*k + va, envelope[i]);
+        } else if(pa != pb) {
+            for(auto i = pb; i <= pa; i++)
+                envelope[i] = std::max((i-pb)*k + vb, envelope[i]);
+        }
+    };
+
+    interpolate_envelope(abs_p[0], abs_v[0], abs_p[1], abs_p[1]);
+    interpolate_envelope(abs_p[1], abs_v[1], abs_p[2], abs_p[2]);
+    interpolate_envelope(abs_p[2], abs_v[2], abs_p[3], abs_p[3]);
+    interpolate_envelope(abs_p[3], abs_v[3], abs_p[4], abs_p[4]);
+    interpolate_envelope(abs_p[4], abs_v[4], abs_p[5], abs_p[5]);
+    interpolate_envelope(abs_p[5], abs_v[5], abs_p[6], abs_p[6]);
+
     return *this;
 }
 
