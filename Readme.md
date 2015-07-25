@@ -13,7 +13,7 @@ This is a drop-in replacement for the component `wavtool.exe` of [UTAU song synt
 
 - Support sample rates other than 44100 Hz
 
-- Robust design makes it not easily to crash
+- Robust design allows it to try to work even with incorrect parameters
 
 ## Building
 
