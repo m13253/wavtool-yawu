@@ -37,6 +37,7 @@ public:
     PCMFile &open(const WTF8::u8string &filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out, int format = 0, int channels = 0, int sample_rate = 0);
     ~PCMFile();
     PCMFile &close();
+    bool is_open() const;
 
     int64_t frames() const;
     int format() const;

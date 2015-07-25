@@ -19,10 +19,13 @@
 
 #include "pcm_merger.hpp"
 #include "option_manager.hpp"
+#include "pcm_file.hpp"
 
 namespace YAWU {
 
 struct PCMMerger::Private {
+    PCMFile input_file;
+    PCMFile output_file;
 };
 
 PCMMerger::PCMMerger(OptionManager &option_manager) :
