@@ -31,6 +31,17 @@
 #include "rand_round.hpp"
 #include "utils.hpp"
 
+#ifndef YAWU_OUTPUT_SAMPLE_FORMAT
+/**
+ * YAWU_OUTPUT_SAMPLE_FORMAT is configurable at compile time
+ *
+ * Some media players only support 16-bit PCM file,
+ * you can configure it by defining `gcc -DYAWU_OUTPUT_SAMPLE_FORMAT=SF_FORMAT_PCM_16`.
+ * Refer to http://www.mega-nerd.com/libsndfile/api.html#open for more options.
+ */
+#define YAWU_OUTPUT_SAMPLE_FORMAT SF_FORMAT_PCM_32
+#endif
+
 namespace YAWU {
 
 struct PCMMerger::Private {
@@ -65,7 +76,7 @@ PCMMerger &PCMMerger::prepare() {
         WTF8::cerr << "Unable to open input file: " << e.what() << std::endl;
     }
     try {
-        p->output_file.open(option_manager.get_output_file_name(), std::ios_base::in | std::ios_base::out, SF_FORMAT_WAV | SF_FORMAT_PCM_32, 1, p->sample_rate != 0 ? p->sample_rate : 44100);
+        p->output_file.open(option_manager.get_output_file_name(), std::ios_base::in | std::ios_base::out, SF_FORMAT_WAV | YAWU_OUTPUT_SAMPLE_FORMAT, 1, p->sample_rate != 0 ? p->sample_rate : 44100);
         if(p->sample_rate != 0) {
             if(p->sample_rate != p->output_file.sample_rate()) {
                 WTF8::cerr << "Warning: Sample rate mismatch between input and output file" << std::endl
