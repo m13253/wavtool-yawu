@@ -118,7 +118,7 @@ double CmdlineParser::parse_note_length(const WTF8::u8string &argv4) {
     if(pos_at != argv4.npos) {
         auto pos_sign = argv4.find_first_of("+-", pos_at+1);
         double ticks = strtonum(std::strtod, argv4.substr(0, pos_at).c_str());
-        double tempo = strtonum(std::strtod, argv4.substr(pos_at+1, pos_sign).c_str());
+        double tempo = strtonum(std::strtod, argv4.substr(pos_at+1, pos_sign != argv4.npos ? pos_sign-pos_at-1 : pos_sign).c_str());
         double note_length = ticks/tempo/8;
         if(pos_sign != argv4.npos) {
             double frac = strtonum(std::strtod, &argv4.data()[pos_sign])/1000;
