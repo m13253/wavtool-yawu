@@ -181,7 +181,7 @@ PCMMerger &PCMMerger::construct_envelope() {
 
     WTF8::clog << "Env: ";
     for(double i = 0.5; i < 74; i++) {
-        size_t sample_idx = size_t(p->envelope.size() * i / 74);
+        size_t sample_idx = size_t((p->envelope.size()-1) * i / 74);
         auto env_value = p->envelope[sample_idx];
         char visual =
             env_value < 1.0 ?
