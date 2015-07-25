@@ -34,9 +34,9 @@ namespace YAWU {
 struct PCMMerger::Private {
     PCMFile input_file;
     PCMFile output_file;
-    size_t sample_rate = 0;
-    size_t prefix_samples = 0;
-    size_t append_samples = 0;
+    int32_t sample_rate = 0;
+    ssize_t prefix_samples = 0;
+    ssize_t append_samples = 0;
     int64_t existing_samples = 0;
     std::vector<double> envelope;
     std::vector<double> buffer1;
@@ -65,7 +65,7 @@ PCMMerger &PCMMerger::prepare() {
     try {
         p->output_file.open(option_manager.get_output_file_name(), std::ios_base::in | std::ios_base::out, SF_FORMAT_WAV | SF_FORMAT_PCM_16, 1, p->sample_rate != 0 ? p->sample_rate : 44100);
         if(p->sample_rate != 0) {
-            if(p->sample_rate != size_t(p->output_file.sample_rate())) {
+            if(p->sample_rate != p->output_file.sample_rate()) {
                 WTF8::cerr << "Warning: Sample rate mismatch between input and output file" << std::endl
                            << "Sample rate: " << p->sample_rate << " != " << p->output_file.sample_rate() << std::endl;
                 p->input_file.close();
@@ -81,12 +81,12 @@ PCMMerger &PCMMerger::prepare() {
         WTF8::cerr << "Unable to open output file: " << e.what() << std::endl;
         return *this;
     }
-    p->prefix_samples = size_t(option_manager.get_overlap() * p->sample_rate);
+    p->prefix_samples = ssize_t(option_manager.get_overlap() * p->sample_rate);
     if(p->prefix_samples < 0) {
         WTF8::cerr << "Warning: overlap value is negative" << std::endl;
         p->prefix_samples = 0;
     }
-    p->append_samples = size_t(RandRound()(option_manager.get_note_length() * p->sample_rate));
+    p->append_samples = ssize_t(RandRound()(option_manager.get_note_length() * p->sample_rate));
     if(p->append_samples < 0) {
         WTF8::cerr << "Warning: note length is negative" << std::endl;
         p->append_samples = 0;
@@ -114,13 +114,13 @@ PCMMerger &PCMMerger::fill_overlap() {
 
 PCMMerger &PCMMerger::read_new_segment() {
     if(p->input_file.is_open()) {
-        ptrdiff_t stp_samples = ptrdiff_t(option_manager.get_stp() * p->sample_rate);
+        ssize_t stp_samples = ssize_t(option_manager.get_stp() * p->sample_rate);
         if(stp_samples >= 0) {
             p->input_file.seek(stp_samples, SEEK_SET);
             if(p->input_file.read(p->buffer2.data(), p->buffer2.size()) < p->buffer2.size())
                 WTF8::cerr << "Warning: Input file is not long enough" << std::endl;
         } else {
-            size_t neg_stp_samples = size_t(-stp_samples);
+            auto neg_stp_samples = -stp_samples;
             if(p->input_file.read(&p->buffer2.data()[neg_stp_samples], p->buffer2.size() - neg_stp_samples) < p->buffer2.size() - neg_stp_samples)
                 WTF8::cerr << "Warning: Input file is not long enough" << std::endl;
         }
