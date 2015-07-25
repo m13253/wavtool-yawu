@@ -69,7 +69,7 @@ PCMMerger &PCMMerger::prepare() {
         if(p->sample_rate != 0) {
             if(p->sample_rate != p->output_file.sample_rate()) {
                 WTF8::cerr << "Warning: Sample rate mismatch between input and output file" << std::endl
-                           << "Sample rate: " << p->sample_rate << " != " << p->output_file.sample_rate() << std::endl;
+                           << "Sample rate: " << p->sample_rate << " Hz != " << p->output_file.sample_rate() << " Hz" << std::endl;
                 p->input_file.close();
             }
         } else {
