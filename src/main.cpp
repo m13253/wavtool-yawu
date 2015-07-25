@@ -40,7 +40,12 @@ int main() {
 
     {
         PCMMerger pcm_merger(*option_manager.get());
-        pcm_merger.prepare();
+        pcm_merger.prepare()
+                  .fill_overlap()
+                  .read_new_segment()
+                  .construct_envelope()
+                  .mix_new_segment()
+                  .write_back();
     }
 
     return 0;

@@ -29,7 +29,12 @@ class PCMMerger {
 public:
     PCMMerger(OptionManager &option_manager);
     ~PCMMerger();
-    void prepare();
+    PCMMerger &prepare();
+    PCMMerger &fill_overlap();
+    PCMMerger &read_new_segment();
+    PCMMerger &construct_envelope();
+    PCMMerger &mix_new_segment();
+    PCMMerger &write_back();
 protected:
     OptionManager &option_manager;
 private:
