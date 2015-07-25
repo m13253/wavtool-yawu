@@ -206,7 +206,7 @@ PCMMerger &PCMMerger::mix_new_segment() {
         auto new_segment = p->buffer2.data();
         auto envelope = p->envelope.data();
         for(size_t i = 0; i < p->buffer1.size(); i++)
-            old_segments[i] += clamp(new_segment[i] * envelope[i], -1.0, 1.0);
+            old_segments[i] = clamp(new_segment[i]*envelope[i] + old_segments[i], -1.0, 1.0);
     }
     return *this;
 }
