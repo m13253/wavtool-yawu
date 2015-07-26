@@ -42,5 +42,5 @@ If you use UTAU with Wine on Linux, please check "Tools" -> "Option" -> "Renderi
 
 ## License
 
-This software is licensed under GNU Lesser General Public License version 3 and later. See the file [COPYING] for more information.
+This software is licensed under GNU Lesser General Public License version 3 and later. See the file [COPYING](COPYING) for more information.
 
