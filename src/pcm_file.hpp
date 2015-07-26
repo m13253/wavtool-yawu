@@ -20,6 +20,7 @@
 #ifndef YAWU_PCM_FILE_HPP
 #define YAWU_PCM_FILE_HPP
 
+#include <cstdint>
 #include <ios>
 #include <stdexcept>
 #include <libwintf8/u8str.h>

@@ -18,6 +18,7 @@
 */
 
 #include "pcm_file.hpp"
+#include <cstdint>
 #include <cstdio>
 #include <ios>
 #include <libwintf8/fileio.h>
