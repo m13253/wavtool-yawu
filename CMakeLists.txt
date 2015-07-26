@@ -23,13 +23,23 @@ set_target_properties(wavtool-yawu PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
 
-target_link_libraries(wavtool-yawu PUBLIC m)  # libm math library
+if(NOT MSVC)
+    find_library(YAWU_LIBM m)  # libm math library
+    target_link_libraries(wavtool-yawu PUBLIC "${YAWU_LIBM}")
+endif()
+
 add_subdirectory(lib/libWinTF8)
 target_link_libraries(wavtool-yawu PUBLIC wintf8)
+
 if(NOT USE_SYSTEM_SNDFILE)
     add_subdirectory(lib/libsndfile-1.0.25)
+    target_link_libraries(wavtool-yawu PUBLIC sndfile)
+elseif(MSVC)
+    target_link_libraries(wavtool-yawu PUBLIC libsndfile-1)
+else()
+    find_library(YAWU_LIBSNDFILE sndfile)
+    target_link_libraries(wavtool-yawu PUBLIC "${YAWU_LIBSNDFILE}")
 endif()
-target_link_libraries(wavtool-yawu PUBLIC sndfile)
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")  # Test subproject
     install(TARGETS wavtool-yawu
