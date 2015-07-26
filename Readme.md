@@ -5,7 +5,7 @@ Yet Another Wavtool for UTAU
 
 This is a drop-in replacement for the component `wavtool.exe` of [UTAU song synthesizer](http://utau2008.web.fc2.com/).
 
-## Advantage
+## Advantages
 
 - Input WAV audio in sample formats at up to 64-bit float
 
