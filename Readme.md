@@ -1,15 +1,15 @@
 wavtool-yawu
 ============
 
-Yet Another Wavtool UTAU
+Yet Another Wavtool for UTAU
 
 This is a drop-in replacement for the component `wavtool.exe` of [UTAU song synthesizer](http://utau2008.web.fc2.com/).
 
 ## Advantage
 
-- Input WAV audio in sample format at up to 64-bit float
+- Input WAV audio in sample formats at up to 64-bit float
 
-- Output WAV audio in sample format at 32-bit
+- Output WAV audio in sample format at 32-bits
 
 - Support sample rates other than 44100 Hz
 
