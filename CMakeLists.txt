@@ -10,6 +10,11 @@ else()
 endif()
 add_definitions(-D_FILE_OFFSET_BITS=64)
 
+if("${YAWU_OUTPUT_SAMPLE_FORMAT}" STREQUAL "")
+    set(YAWU_OUTPUT_SAMPLE_FORMAT SF_FORMAT_PCM_32)  # See pcm_merger.cpp for more information
+endif()
+add_definitions("-DYAWU_OUTPUT_SAMPLE_FORMAT=${YAWU_OUTPUT_SAMPLE_FORMAT}")
+
 file(GLOB_RECURSE YAWU_SRC_SOURCES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/*.cpp")
 add_executable(wavtool-yawu ${YAWU_SRC_SOURCES})
 

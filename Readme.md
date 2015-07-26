@@ -34,7 +34,7 @@ The resulting executable file is in `build/wavtool-yawu.exe`.
 
 Open your project in UTAU, Select "Project" -> "Project Property" -> "Tool 1 (append)". Choose `wavtool-yawu.exe`.
 
-You can also use `wavtool-yawu` with [Cadencii](http://osdn.jp/projects/cadencii/) or [jCadencii](https://packages.debian.org/sid/main/jcadencii).
+You can also use `wavtool-yawu` with [Cadencii](http://osdn.jp/projects/cadencii/) or [jCadencii](https://packages.debian.org/sid/main/jcadencii), but you need to configure `wavtool-yawu` with `-DYAWU_OUTPUT_SAMPLE_FORMAT=SF_FORMAT_PCM_16`.
 
 ## Note
 
