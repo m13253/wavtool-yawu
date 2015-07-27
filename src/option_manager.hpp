@@ -57,8 +57,8 @@ protected:
     double note_length = 0;
     double overlap = 0;
 
-    double p[6] = { 0 };
-    double v[6] = { 1 };
+    double p[6] = { 0, 0, 0, 0, 0, 0 };
+    double v[6] = { 1, 1, 1, 1, 1, 1 };
     bool p5_enabled = false;
 };
 
