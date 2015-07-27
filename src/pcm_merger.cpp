@@ -42,6 +42,10 @@
 #define YAWU_OUTPUT_SAMPLE_FORMAT SF_FORMAT_PCM_32
 #endif
 
+#ifdef _MSC_VER
+typedef ptrdiff_t ssize_t;
+#endif
+
 namespace YAWU {
 
 struct PCMMerger::Private {
