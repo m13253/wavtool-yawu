@@ -24,8 +24,7 @@ set_target_properties(wavtool-yawu PROPERTIES
 )
 
 if(NOT MSVC)
-    find_library(YAWU_LIBM m)  # libm math library
-    target_link_libraries(wavtool-yawu PUBLIC "${YAWU_LIBM}")
+    target_link_libraries(wavtool-yawu PUBLIC m)  # libm math library
 endif()
 
 add_subdirectory(lib/libWinTF8)

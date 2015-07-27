@@ -70,7 +70,7 @@ PCMMerger::~PCMMerger() {
 
 PCMMerger &PCMMerger::prepare() {
     try {
-        p->input_file.open(option_manager.get_input_file_name(), std::ios_base::in);
+        p->input_file.open(option_manager.get_input_file_name(), std::ios_base::in, 0, 1, 0);
         p->sample_rate = p->input_file.sample_rate();
         if(p->input_file.channels() != 1) {
             p->input_file.close();
