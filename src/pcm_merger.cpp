@@ -118,12 +118,17 @@ PCMMerger &PCMMerger::prepare() {
 
 PCMMerger &PCMMerger::fill_overlap() {
     if(p->output_file.is_open()) {
-        if(p->existing_samples >= int64_t(p->prefix_samples)) {
-            p->output_file.seek(p->existing_samples - int64_t(p->prefix_samples), SEEK_SET);
-            p->output_file.read(p->buffer1.data(), p->prefix_samples);
-        } else {
-            p->output_file.seek(0, SEEK_SET);
-            p->output_file.read(&p->buffer1.data()[int64_t(p->prefix_samples) - p->existing_samples], p->existing_samples);
+        try {
+            if(p->existing_samples >= int64_t(p->prefix_samples)) {
+                p->output_file.seek(p->existing_samples - int64_t(p->prefix_samples), SEEK_SET);
+                p->output_file.read(p->buffer1.data(), p->prefix_samples);
+            } else {
+                p->output_file.seek(0, SEEK_SET);
+                p->output_file.read(&p->buffer1.data()[int64_t(p->prefix_samples) - p->existing_samples], p->existing_samples);
+            }
+        } catch(PCMFile::FileError e) {
+            WTF8::cerr << "Unable to read from output file: " << e.what() << std::endl;
+            return *this;
         }
     }
     return *this;
@@ -131,15 +136,20 @@ PCMMerger &PCMMerger::fill_overlap() {
 
 PCMMerger &PCMMerger::read_new_segment() {
     if(p->input_file.is_open()) {
-        ssize_t stp_samples = ssize_t(option_manager.get_stp() * p->sample_rate);
-        if(stp_samples >= 0) {
-            p->input_file.seek(stp_samples, SEEK_SET);
-            if(p->input_file.read(p->buffer2.data(), p->buffer2.size()) < p->buffer2.size())
-                WTF8::cerr << "Warning: Input file is not long enough" << std::endl;
-        } else {
-            auto neg_stp_samples = -stp_samples;
-            if(p->input_file.read(&p->buffer2.data()[neg_stp_samples], p->buffer2.size() - neg_stp_samples) < p->buffer2.size() - neg_stp_samples)
-                WTF8::cerr << "Warning: Input file is not long enough" << std::endl;
+        try {
+            ssize_t stp_samples = ssize_t(option_manager.get_stp() * p->sample_rate);
+            if(stp_samples >= 0) {
+                p->input_file.seek(stp_samples, SEEK_SET);
+                if(p->input_file.read(p->buffer2.data(), p->buffer2.size()) < p->buffer2.size())
+                    WTF8::cerr << "Warning: Input file is not long enough" << std::endl;
+            } else {
+                auto neg_stp_samples = -stp_samples;
+                if(p->input_file.read(&p->buffer2.data()[neg_stp_samples], p->buffer2.size() - neg_stp_samples) < p->buffer2.size() - neg_stp_samples)
+                    WTF8::cerr << "Warning: Input file is not long enough" << std::endl;
+            }
+        } catch(PCMFile::FileError e) {
+            WTF8::cerr << "Unable to read from input file: " << e.what() << std::endl;
+            return *this;
         }
     }
     return *this;
@@ -228,12 +238,17 @@ PCMMerger &PCMMerger::mix_new_segment() {
 
 PCMMerger &PCMMerger::write_back() {
     if(p->output_file.is_open()) {
-        if(p->existing_samples >= int64_t(p->prefix_samples)) {
-            p->output_file.seek(p->existing_samples - int64_t(p->prefix_samples), SEEK_SET);
-            p->output_file.write(p->buffer1.data(), p->buffer1.size());
-        } else {
-            p->output_file.seek(0, SEEK_SET);
-            p->output_file.write(&p->buffer1.data()[int64_t(p->prefix_samples) - p->existing_samples], int64_t(p->buffer1.size()) - (int64_t(p->prefix_samples) - p->existing_samples));
+        try {
+            if(p->existing_samples >= int64_t(p->prefix_samples)) {
+                p->output_file.seek(p->existing_samples - int64_t(p->prefix_samples), SEEK_SET);
+                p->output_file.write(p->buffer1.data(), p->buffer1.size());
+            } else {
+                p->output_file.seek(0, SEEK_SET);
+                p->output_file.write(&p->buffer1.data()[int64_t(p->prefix_samples) - p->existing_samples], int64_t(p->buffer1.size()) - (int64_t(p->prefix_samples) - p->existing_samples));
+            }
+        } catch(PCMFile::FileError e) {
+            WTF8::cerr << "Unable to write to output file: " << e.what() << std::endl;
+            return *this;
         }
     }
     return *this;
