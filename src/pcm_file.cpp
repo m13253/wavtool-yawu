@@ -22,6 +22,9 @@
 #include <cstdio>
 #include <ios>
 #include <libwintf8/fileio.h>
+#ifdef _WIN32
+#include <libwintf8/localconv.h>
+#endif
 #include <libwintf8/u8str.h>
 #ifdef _WIN32
 #include <windows.h>
@@ -168,6 +171,16 @@ SndfileHandle &PCMFile::sndfile_cxx() const {
 
 SNDFILE *PCMFile::sndfile_c() const {
     return p->sndfile.rawHandle();
+}
+
+PCMFile::FileError::FileError(const char *what) :
+    std::runtime_error(what),
+#ifdef _WIN32
+    m_what(WTF8::local_to_utf8(std::string(what)))
+#else
+    m_what(what)
+#endif
+    {
 }
 
 }
