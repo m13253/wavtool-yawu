@@ -20,6 +20,7 @@
 #include "pcm_merger.hpp"
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <ios>
@@ -98,7 +99,7 @@ PCMMerger &PCMMerger::prepare() {
         WTF8::cerr << "Unable to open output file: " << e.what() << std::endl;
         return *this;
     }
-    p->prefix_samples = ssize_t(option_manager.get_overlap() * p->sample_rate);
+    p->prefix_samples = ssize_t(std::round(option_manager.get_overlap() * p->sample_rate));
     if(p->prefix_samples < 0) {
         WTF8::cerr << "Warning: overlap value is negative" << std::endl;
         p->prefix_samples = 0;
@@ -137,7 +138,7 @@ PCMMerger &PCMMerger::fill_overlap() {
 PCMMerger &PCMMerger::read_new_segment() {
     if(p->input_file.is_open()) {
         try {
-            ssize_t stp_samples = ssize_t(option_manager.get_stp() * p->sample_rate);
+            ssize_t stp_samples = ssize_t(std::round(option_manager.get_stp() * p->sample_rate));
             if(stp_samples >= 0) {
                 p->input_file.seek(stp_samples, SEEK_SET);
                 if(p->input_file.read(p->buffer2.data(), p->buffer2.size()) < p->buffer2.size())
@@ -163,20 +164,20 @@ PCMMerger &PCMMerger::construct_envelope() {
     double abs_v[7];
     abs_p[0] = 0;
     abs_v[0] = 0;
-    abs_p[1] = ssize_t(option_manager.get_env_p(1) * p->sample_rate);
+    abs_p[1] = ssize_t(std::round(option_manager.get_env_p(1) * p->sample_rate));
     abs_v[1] = option_manager.get_env_v(1);
-    abs_p[2] = ssize_t((option_manager.get_env_p(1) + option_manager.get_env_p(2)) * p->sample_rate);
+    abs_p[2] = ssize_t(std::round((option_manager.get_env_p(1) + option_manager.get_env_p(2)) * p->sample_rate));
     abs_v[2] = option_manager.get_env_v(2);
     if(option_manager.is_p5_enabled()) {
-        abs_p[3] = ssize_t((option_manager.get_env_p(1) + option_manager.get_env_p(2) + option_manager.get_env_p(5)) * p->sample_rate);
+        abs_p[3] = ssize_t(std::round((option_manager.get_env_p(1) + option_manager.get_env_p(2) + option_manager.get_env_p(5)) * p->sample_rate));
         abs_v[3] = option_manager.get_env_v(5);
     } else {
         abs_p[3] = abs_p[2];
         abs_v[3] = abs_v[2];
     }
-    abs_p[4] = ssize_t(p->envelope.size()-1) - ssize_t((option_manager.get_env_p(3) + option_manager.get_env_p(4)) * p->sample_rate);
+    abs_p[4] = ssize_t(p->envelope.size()-1) - ssize_t(std::round((option_manager.get_env_p(3) + option_manager.get_env_p(4)) * p->sample_rate));
     abs_v[4] = option_manager.get_env_v(3);
-    abs_p[5] = ssize_t(p->envelope.size()-1) - ssize_t(option_manager.get_env_p(4) * p->sample_rate);
+    abs_p[5] = ssize_t(p->envelope.size()-1) - ssize_t(std::round(option_manager.get_env_p(4) * p->sample_rate));
     abs_v[5] = option_manager.get_env_v(4);
     abs_p[6] = ssize_t(p->envelope.size()-1);
     abs_v[6] = 0;
@@ -206,7 +207,7 @@ PCMMerger &PCMMerger::construct_envelope() {
 
     WTF8::clog << "Env: ";
     for(double i = 0.5; i < 74; i++) {
-        size_t sample_idx = size_t((p->envelope.size()-1) * i / 74);
+        size_t sample_idx = size_t(std::round((p->envelope.size()-1) * i / 74));
         auto env_value = p->envelope[sample_idx];
         char visual =
             env_value < 1.0 ?
