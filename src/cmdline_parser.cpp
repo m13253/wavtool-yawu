@@ -22,6 +22,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include <libwintf8/fileio.h>
 #include <libwintf8/termio.h>
 #include <libwintf8/u8str.h>
 #include "option_manager.hpp"
@@ -124,10 +125,13 @@ double CmdlineParser::parse_note_length(const WTF8::u8string &argv4) {
         if(pos_sign != argv4.npos) {
             double frac = strtonum(std::strtod, &argv4.data()[pos_sign])/1000;
             note_length += frac;
-            if(argv4.size() > pos_sign+1 && argv4[pos_sign+1] == '.')
+#ifdef _WIN32
+            if(frac == 0 && argv4.size() > pos_sign+1 && argv4[pos_sign+1] == '.' && // Format is similar to "+.00"
+                WTF8::access("C:\\Windows\\system32\\wineboot.exe", 0) == 0)         // Is running under Wine
                 WTF8::cerr << "Warning: UTAU is providing incorrect parameters," << std::endl
                            << "         please check \"Tools\" -> \"Option\" -> \"Rendering\" -> \"Note length " << std::endl
                            << "         calculated by GUI front-end\"." << std::endl;
+#endif
         }
         return note_length;
     } else {
