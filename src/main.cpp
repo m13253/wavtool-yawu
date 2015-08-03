@@ -34,20 +34,16 @@ int main() {
                << "https://github.com/m13253/wavtool-yawu" << std::endl
                << std::endl;
 
-    {
-        CmdlineParser cmdline_parser(*option_manager.get());
-        cmdline_parser.parse_argv(WTF8::getargv());
-    }
+    CmdlineParser(*option_manager.get())
+        .parse_argv(WTF8::getargv());
 
-    {
-        PCMMerger pcm_merger(*option_manager.get());
-        pcm_merger.prepare()
-                  .fill_overlap()
-                  .read_new_segment()
-                  .construct_envelope()
-                  .mix_new_segment()
-                  .write_back();
-    }
+    PCMMerger(*option_manager.get())
+        .prepare()
+        .fill_overlap()
+        .read_new_segment()
+        .construct_envelope()
+        .mix_new_segment()
+        .write_back();
 
     return 0;
 }
