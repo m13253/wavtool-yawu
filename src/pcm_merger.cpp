@@ -231,8 +231,11 @@ PCMMerger &PCMMerger::mix_new_segment() {
         auto old_segments = p->buffer1.data();
         auto new_segment = p->buffer2.data();
         auto envelope = p->envelope.data();
-        for(size_t i = 0; i < p->buffer1.size(); i++)
+        for(size_t i = 0; i < p->buffer1.size(); i++) {
             old_segments[i] = clamp(new_segment[i]*envelope[i] + old_segments[i], -1.0, 1.0);
+            if(std::isnan(old_segments[i]))
+                old_segments[i] = 0;
+        }
     }
     return *this;
 }
