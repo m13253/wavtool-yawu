@@ -26,8 +26,8 @@ else
     then
         # jCadencii does not use the real output file.
         # Instead, it uses two temporary files,
-        #
         # which the original wavtool generates during rendering.
+        #
         # So let us regenerate these temporary files
         # to satisfy jCadencii.
         head -c 44 "$1" > "$1.whd"
