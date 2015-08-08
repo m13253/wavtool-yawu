@@ -30,7 +30,7 @@ endif()
 add_subdirectory(lib/libWinTF8)
 target_link_libraries(wavtool-yawu PUBLIC wintf8)
 
-if(NOT USE_SYSTEM_SNDFILE)
+if(USE_BUNDLED_SNDFILE)
     add_subdirectory(lib/libsndfile-1.0.25)
     target_link_libraries(wavtool-yawu PUBLIC sndfile)
 elseif(MSVC)

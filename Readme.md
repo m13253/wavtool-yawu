@@ -24,7 +24,7 @@ Install [MSYS2](https://msys2.github.io) on Windows or [MinGW-w64](http://mingw-
 Switch to the directory of `wavtool-yawu`, type:
 
 ```bash
-./configure -DCMAKE_TOOLCHAIN_FILE=tools/toolchain-i686-w64-mingw32.cmake -DCMAKE_EXE_LINKER_FLAGS=-static
+./configure -DCMAKE_TOOLCHAIN_FILE=tools/toolchain-i686-w64-mingw32.cmake -DCMAKE_EXE_LINKER_FLAGS=-static -DUSE_BUNDLED_SNDFILE=1
 make
 ```
 
