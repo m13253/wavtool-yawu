@@ -23,8 +23,10 @@ set_target_properties(wavtool-yawu PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
 
-if(NOT MSVC)
-    target_link_libraries(wavtool-yawu PUBLIC m)  # libm math library
+include(CheckLibraryExists)
+check_library_exists("m" "sin" "" YAWU_HAVE_LIBM)
+if(YAWU_HAVE_LIBM)
+    target_link_libraries(wavtool-yawu PUBLIC "m")
 endif()
 
 add_subdirectory(lib/libWinTF8)
