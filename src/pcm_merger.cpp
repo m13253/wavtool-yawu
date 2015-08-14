@@ -59,7 +59,6 @@ struct PCMMerger::Private {
     std::vector<double> envelope;
     std::vector<double> buffer1;
     std::vector<double> buffer2;
-    bool results_written = false;
 };
 
 PCMMerger::PCMMerger(OptionManager &option_manager) :
