@@ -185,10 +185,10 @@ PCMMerger &PCMMerger::construct_envelope() {
     const auto interpolate_envelope = [&](ssize_t pa, double va, ssize_t pb, double vb) {
         if(pa == pb)
             return;
+        double k = (vb-va) / (pb-pa);
         pa = clamp(pa, ssize_t(0), ssize_t(p->envelope.size()-1));
         pb = clamp(pb, ssize_t(0), ssize_t(p->envelope.size()-1));
         auto envelope = p->envelope.data();
-        double k = (vb-va) / (pb-pa);
         if(pa < pb) {
             for(auto i = pa; i <= pb; i++)
                 envelope[i] = std::max((i-pa)*k + va, envelope[i]);
